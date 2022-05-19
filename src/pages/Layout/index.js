@@ -1,6 +1,8 @@
 function Layout () {
   return (
-    <div>layout</div>
+    <div>
+      layout
+    </div>
   )
 }
 

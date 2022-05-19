@@ -1,14 +1,26 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { Card, Form, Input, Checkbox } from 'antd'
 import logo from '@/assets/logo.png'
 import './index.scss'
+import { useStore } from '@/store'
+import { useNavigate } from 'react-router-dom'
 
 function Login () {
+  const { loginStore } = useStore()
+  const navigate = useNavigate()
   // 成功
-  function onFinish (values) {
+  async function onFinish (values) {
     console.log(values)
     // values：放置的是所有表单项中用户输入的内容
     // todo: 登陆
+    await loginStore.getToken({
+      mobile: values.username,
+      code: values.password
+    })
+    // 跳转至首页
+    navigate('/', { replace: true })
+    // 提示用户
+    message.success("登陆成功")
   }
   // 失败
   // const onFinishFailed = (errorInfo) => {
@@ -24,8 +36,9 @@ function Login () {
           // onFinishFailed={onFinishFailed}
           validateTrigger={['onBlur', 'onChange']}
           initialValues={{
+            username: 13811111111,
             remember: true,
-            password: '123456'
+            password: '246810'
           }}
         >
           <Form.Item
