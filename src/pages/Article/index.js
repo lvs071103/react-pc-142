@@ -8,6 +8,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
+import { resolveDynamicComponent } from 'vue'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -22,30 +23,48 @@ const Article = () => {
   useEffect(() => {
     loadChannelList()
   }, [])
+
+  // 文章列表管理 统一管理数据 将来修入给setList传对象
+  const [articles, seArticles] = useState({
+    list: [], //文章列表
+    count: 0 // 文章数量
+  })
+
+  // 文章参数管理
+  const [params, setParams] = useState({
+    page: 1,
+    per_page: 10
+  })
+  // 如果异步请求函数需要依赖一些数据的变化而重新执行
+  // 推荐把它写在内部
+  // 统一不抽离函数到外面 只要涉及到异步请求的函数 都放到useEffect内部
+  // 本质区别：写到外面每次组件更新都会重新进行函数初始化 这本身就是一次性能消耗
+  // 而写到useEffect中，只会在依赖项发生变化的时候 函数才会进行重新初始化
+  // 避免性能损失
+  useEffect(() => {
+    const loadList = async () => {
+      const res = await http.get('/mp/articles', { params })
+      console.log(res)
+      const { results, total_count } = res.data
+      seArticles({
+        list: results,
+        count: total_count,
+      })
+    }
+    loadList()
+  }, [params])
+
   const onFinish = (values) => {
     console.log(values)
   }
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: ['http://geek.itheima.net/resources/images/15.jpg'],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
-    }
-  ]
+
   const columns = [
     {
       title: '封面',
       dataIndex: 'cover',
       width: 120,
       render: cover => {
-        return <img src={cover || img404} width={80} height={60} alt="" />
+        return <img src={cover.images[0] || img404} width={80} height={60} alt="" />
       }
     },
     {
@@ -143,8 +162,8 @@ const Article = () => {
         </Form>
       </Card>
       {/* 文章列表区域 */}
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${articles.count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={articles.list} />
       </Card>
     </div>
   )
