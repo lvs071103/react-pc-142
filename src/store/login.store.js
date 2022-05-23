@@ -1,6 +1,6 @@
 // login module
-import { getToken, http, setToken } from '@/utils'
-import { makeAutoObservable } from 'mobx'
+import { getToken, http, removeToken, setToken } from '@/utils'
+import { makeAutoObservable, runInAction } from 'mobx'
 
 class LoginStore {
   token = getToken() || ''
@@ -16,9 +16,17 @@ class LoginStore {
     })
     console.log(res.data)
     // 存入token
+    // runInAction(() => {
+    //   this.token = res.data.token
+    // })
     this.token = res.data.token
     // 存入localStorage
     setToken(this.token)
+  }
+
+  loginOut = () => {
+    this.token = ''
+    removeToken()
   }
 }
 
