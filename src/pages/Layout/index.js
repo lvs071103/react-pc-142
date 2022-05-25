@@ -16,13 +16,14 @@ const { Header, Sider } = Layout
 const GeekLayout = () => {
   const { pathname } = useLocation()
   // console.log(pathname)
-  const { userStore, loginStore } = useStore()
+  const { userStore, loginStore, channelStore } = useStore()
   // 获取用衣数据民
   useEffect(() => {
     try {
       userStore.getUserInfo()
+      channelStore.loadChannelList()
     } catch { }
-  }, [userStore])
+  }, [userStore, channelStore])
 
   // function getItem (label, key, icon, children, type) {
   //   return {

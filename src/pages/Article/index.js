@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Table, Tag, Card, Space, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import 'moment/locale/zh-cn'
 import locale from 'antd/es/date-picker/locale/zh_CN'
@@ -8,21 +8,25 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
-import { resolveDynamicComponent } from 'vue'
+// import { resolveDynamicComponent } from 'vue'
+import { useStore } from '@/store'
+import { observer } from 'mobx-react-lite'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  // 频道列表管理移入store中
+  const { channelStore } = useStore()
   // 频道列表管理
-  const [channelList, setChannelList] = useState([])
-  const loadChannelList = async () => {
-    const res = await http.get('/channels')
-    setChannelList(res.data.channels)
-  }
-  useEffect(() => {
-    loadChannelList()
-  }, [])
+  // const [channelList, setChannelList] = useState([])
+  // const loadChannelList = async () => {
+  //   const res = await http.get('/channels')
+  //   setChannelList(res.data.channels)
+  // }
+  // useEffect(() => {
+  //   loadChannelList()
+  // }, [])
 
   // 文章列表管理 统一管理数据 将来修入给setList传对象
   const [articles, seArticles] = useState({
@@ -85,6 +89,8 @@ const Article = () => {
     })
   }
 
+  // 删除
+
   const delArticle = async (data) => {
     console.log(data)
     await http.delete(`/mp/articles/${data.id}`)
@@ -95,6 +101,11 @@ const Article = () => {
     })
   }
 
+  // 编辑
+  const navigate = useNavigate()
+  const goPublish = (data) => {
+    navigate(`/publish?id=${data.id}`)
+  }
   const columns = [
     {
       title: '封面',
@@ -135,7 +146,12 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => goPublish(data)}
+            />
             <Popconfirm
               title="确认删除该条文章吗?"
               onConfirm={() => delArticle(data)}
@@ -189,7 +205,7 @@ const Article = () => {
               // defaultValue="lucy"
               style={{ width: 120 }}
             >
-              {channelList.map(channel => (
+              {channelStore.channelList.map(channel => (
                 <Option value={channel.id} key={channel.id}>{channel.name}</Option>
               ))}
             </Select>
@@ -226,4 +242,4 @@ const Article = () => {
   )
 }
 
-export default Article
+export default observer(Article)
