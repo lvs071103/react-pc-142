@@ -1,8 +1,8 @@
 .publish {
   position: relative;
-  .ql-container {
-    height: 400px !important;
-  }
+  // .ql-container {
+  //   height: 400px !important;
+  // }
 }
 
 .ant-upload-list {
@@ -13,8 +13,8 @@
   }
 }
 
-// .publish-quill {
-//   .ql-editor {
-//     min-height: 300px;
-//   }
-// }
+.publish-quill {
+  .ql-editor {
+    min-height: 300px;
+  }
+}
