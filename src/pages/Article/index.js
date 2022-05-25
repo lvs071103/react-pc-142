@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Table, Tag, Card, Space, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Table, Tag, Card, Space, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import 'moment/locale/zh-cn'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import './index.scss'
@@ -78,11 +78,20 @@ const Article = () => {
     })
 
   }
-
   const pageChange = (page) => {
     setParams({
       ...params,
       page
+    })
+  }
+
+  const delArticle = async (data) => {
+    console.log(data)
+    await http.delete(`/mp/articles/${data.id}`)
+    // 刷新一下列表
+    setParams({
+      ...params,
+      page: 1
     })
   }
 
@@ -127,12 +136,21 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            <Popconfirm
+              title="确认删除该条文章吗?"
+              onConfirm={() => delArticle(data)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              // onClick={() => delArticle(data)}
+              />
+            </Popconfirm>
+
           </Space>
         )
       }
