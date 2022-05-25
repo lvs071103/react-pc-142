@@ -33,7 +33,8 @@ const Article = () => {
   // 文章参数管理
   const [params, setParams] = useState({
     page: 1,
-    per_page: 10
+    per_page: 10,
+    // status: 0
   })
   // 如果异步请求函数需要依赖一些数据的变化而重新执行
   // 推荐把它写在内部
@@ -56,6 +57,33 @@ const Article = () => {
 
   const onFinish = (values) => {
     console.log(values)
+    const { channel_id, date, status } = values
+    //数据处理
+    const _params = {}
+    if (status !== -1) {
+      _params.status = status
+    }
+    if (channel_id) {
+      _params.channel_id = channel_id
+    }
+    if (date) {
+      _params.begin_pubdate = date[0].format('YYYY-MM-DD')
+      _params.end_pubdate = date[1].format('YYYY-MM-DD')
+    }
+    // 修改params数据， 引起接口重新发送，对象的合并是一个整体覆盖，改了对像的整体引用
+    // setParams(params)
+    setParams({
+      ...params,
+      ..._params
+    })
+
+  }
+
+  const pageChange = (page) => {
+    setParams({
+      ...params,
+      page
+    })
   }
 
   const columns = [
@@ -163,7 +191,18 @@ const Article = () => {
       </Card>
       {/* 文章列表区域 */}
       <Card title={`根据筛选条件共查询到 ${articles.count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={articles.list} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={articles.list}
+          pagination={
+            {
+              pageSize: params.per_page,
+              total: articles.count,
+              onChange: pageChange
+            }
+          }
+        />
       </Card>
     </div>
   )
