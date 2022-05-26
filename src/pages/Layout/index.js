@@ -72,13 +72,15 @@ const GeekLayout = () => {
       </Header>
       <Layout>
         <Sider width={200} className="site-layout-background">
-          {/* 高亮原理：  defaultSelectedKeys===key 
+          {/* 高亮原理：  
+          defaultSelectedKeys===key 
           获取当前激活的path路径 ？
           */}
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={[pathname]}
+            // defaultSelectedKeys={[pathname]}
+            selectedKeys={[pathname]}
             style={{ height: '100%', borderRight: 0 }}
             items={items}
           >
