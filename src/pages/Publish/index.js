@@ -38,6 +38,12 @@ const Publish = () => {
     // 最终react state fileList中存放的数据有response.data.url
     setFileList(fileList)
   }
+  // 切换图片
+  const [imageCount, setImageCount] = useState(1)
+  const radioChange = (e) => {
+    console.log(e.target.value)
+    setImageCount(e.target.value)
+  }
   return (
     <div className="publish">
       <Card
@@ -77,25 +83,27 @@ const Publish = () => {
 
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={radioChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            <Upload
-              name="image"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList
-              action="http://geek.itheima.net/v1_0/upload"
-              fileList={fileList}
-              onChange={onUploadChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+            {imageCount > 0 && (
+              <Upload
+                name="image"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList
+                action="http://geek.itheima.net/v1_0/upload"
+                fileList={fileList}
+                onChange={onUploadChange}
+              >
+                <div style={{ marginTop: 8 }}>
+                  <PlusOutlined />
+                </div>
+              </Upload>
+            )}
           </Form.Item>
           {/* 这里是富文本组件 已经被Form.Item控制 */}
           {/* 它的输入内容会在onFinished回调中收集起来 */}
