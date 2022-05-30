@@ -19,6 +19,10 @@ import { useStore } from '@/store'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, useState } from 'react'
 import { http } from '@/utils'
+// import RichEditor from '@/hooks/editorState'
+// import React from "react"
+// import { Editor, EditorState } from "draft-js"
+// import "draft-js/dist/Draft.css"
 
 const { Option } = Select
 
@@ -71,6 +75,7 @@ const Publish = () => {
     console.log(values)
     // 数据的二次处理 重点处理cover字段
     const { channel_id, content, title, type } = values
+    console.log(content)
     const params = {
       channel_id,
       content,
@@ -96,7 +101,7 @@ const Publish = () => {
   // 编辑功能
   const [params] = useSearchParams()
   const articleId = params.get('id')
-  console.log('route: ', articleId)
+  // console.log('route: ', articleId)
   // 数据回填 id调用接口， 1.表单回填 2.暂存列表 3.upload组件fileList需要回填
   const form = useRef(null)
   useEffect(() => {
@@ -116,9 +121,19 @@ const Publish = () => {
     // 必须是编辑状态 教程可以发送请求
     if (articleId) {
       loadDetail()
-      console.log(form.current)
+      // console.log(form.current)
     }
   }, [articleId])
+
+  // draft.js
+  // const [editorState, setEditorState] = React.useState(() =>
+  //   EditorState.createEmpty()
+  // )
+
+  // const editor = React.useRef(null)
+  // function focusEditor () {
+  //   editor.current.focus()
+  // }
 
   return (
     <div className="publish">
@@ -136,7 +151,7 @@ const Publish = () => {
           onFinish={onFinish}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1, content: 'this is content' }}
+          initialValues={{ content: '' }}
           ref={form}
         >
           <Form.Item
@@ -195,9 +210,21 @@ const Publish = () => {
             <ReactQuill
               theme='snow'
               className='publish-quill'
-            // value={value}
-            // onChange={setValue}
             />
+            {/* <div
+              style={{ border: "1px solid black", minHeight: "6em", cursor: "text" }}
+              onClick={focusEditor}
+            >
+              <Editor
+                ref={editor}
+                editorState={editorState}
+                onChange={setEditorState}
+                placeholder="Write something!"
+                wrapperClassName="wrapper-class"
+                editorClassName="editor-class"
+                toolbarClassName="toolbar-class"
+              />
+            </div> */}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
