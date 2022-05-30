@@ -1,6 +1,6 @@
 // login module
 import { getToken, http, removeToken, setToken } from '@/utils'
-import { makeAutoObservable, runInAction } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 class LoginStore {
   token = getToken() || ''
