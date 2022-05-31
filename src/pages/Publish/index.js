@@ -19,10 +19,6 @@ import { useStore } from '@/store'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useRef, useState } from 'react'
 import { http } from '@/utils'
-// import RichEditor from '@/hooks/editorState'
-// import React from "react"
-// import { Editor, EditorState } from "draft-js"
-// import "draft-js/dist/Draft.css"
 
 const { Option } = Select
 
@@ -125,15 +121,34 @@ const Publish = () => {
     }
   }, [articleId])
 
-  // draft.js
-  // const [editorState, setEditorState] = React.useState(() =>
-  //   EditorState.createEmpty()
-  // )
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      ['link', 'code'],
+      ['clean'],
+    ],
+  }
 
-  // const editor = React.useRef(null)
-  // function focusEditor () {
-  //   editor.current.focus()
-  // }
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'code',
+  ]
 
   return (
     <div className="publish">
@@ -210,21 +225,9 @@ const Publish = () => {
             <ReactQuill
               theme='snow'
               className='publish-quill'
+              modules={modules}
+              formats={formats}
             />
-            {/* <div
-              style={{ border: "1px solid black", minHeight: "6em", cursor: "text" }}
-              onClick={focusEditor}
-            >
-              <Editor
-                ref={editor}
-                editorState={editorState}
-                onChange={setEditorState}
-                placeholder="Write something!"
-                wrapperClassName="wrapper-class"
-                editorClassName="editor-class"
-                toolbarClassName="toolbar-class"
-              />
-            </div> */}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
